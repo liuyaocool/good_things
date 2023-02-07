@@ -1,0 +1,4 @@
+
+avi转mp4: ffmpeg -i ***.avi -c:v copy -y ***.mp4
+ts转mp4: ffmpeg -i ***.ts -c:v copy -y ***.mp4
+webm转mp4: ffmpeg -i ***.webm -c:v copy -y ***.mp4
