@@ -31,7 +31,8 @@ public class Convert {
         if (0 != process.waitFor()) {
             if (1 == process.exitValue()) {
                 InputStream is = process.getInputStream();
-                byte[] bytes = is.readAllBytes();
+                byte[] bytes = new byte[8192];
+                int readLen = is.read(bytes);
                 System.out.println(new String(bytes, StandardCharsets.UTF_8)
                         .replace("\n", ""));
                 System.out.format("执行失败: %s\n", fullPath);
