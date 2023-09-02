@@ -1,17 +1,25 @@
-import java.io.File;
-import java.io.InputStream;
+import sun.nio.ch.FileChannelImpl;
+
+import java.io.*;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
 import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class Convert {
 
     static Runtime runtime = Runtime.getRuntime();
 
     public static void main(String[] args) throws Exception {
-        convert(new File("/Users/liuyao/Documents/av/webm"), ".ts");
+//        convert(new File("/Users/liuyao/Documents/jp/video/aa"), ".avi");
+        convert(new File("/Users/liuyao/Documents/jp/video"), ".ts");
     }
 
     static void convert(File file, String suffix) throws Exception{
         if (!file.exists()) {
+            System.out.println("路径不存在");
             return;
         }
         if (file.isDirectory()) {
@@ -26,19 +34,7 @@ public class Convert {
         }
         String fullPathNew = fullPath.substring(0, fullPath.length() - suffix.length()) + ".mp4";
 
-        Process process = runtime.exec(String.format(
-                "ffmpeg -i %s -c:v copy -y %s", fullPath, fullPathNew));
-        if (0 != process.waitFor()) {
-            if (1 == process.exitValue()) {
-                InputStream is = process.getInputStream();
-                byte[] bytes = new byte[8192];
-                int readLen = is.read(bytes);
-                System.out.println(new String(bytes, StandardCharsets.UTF_8)
-                        .replace("\n", ""));
-                System.out.format("执行失败: %s\n", fullPath);
-                return;
-            }
-        }
-        System.out.format("convert: %s\n", fullPath);
+        String[] command = {"ffmpeg", "-i", fullPath, "-c:v", "copy", "-y", fullPathNew};
+        System.out.format(Util.run(command) ? "转换成功: %s\n" : "转换失败: %s\n", fullPath);
     }
 }
