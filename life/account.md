@@ -17,3 +17,15 @@
 ## v2ray
 
 https://v2rayssr.com/teach-vless.html
+
+#apple
+
+- 中国：liuyaojiangziya@163.com , 2809957275@qq.com   
+- 日本：m15588913218@163.com      
+- 美国：jiangyangxiaose@gmail.com   阳生
+
+
+# 其他账号
+
+- 真实赛车3: qq邮箱
+- 街头篮球: liu2809957275	阳生
