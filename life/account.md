@@ -9,7 +9,7 @@
 | dns | https://dash.cloudflare.com/ | 已关联 ilinux.ink |
 | VPS1 | https://my.racknerd.com/ | ;t:lPIyYeGA2 / 7ZnxN540E1y8tLtlON |
 | VPS1列表 | https://www.zhujiceping.com/50572.html |  |
-| VPS2(3年) | https://pacificrack.com/ |  |
+| VPS2(3年) | https://pacificrack.com/ | 163邮箱 |
 | VPS3 | 搬瓦工 |  |
 
 # 教程
