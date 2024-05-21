@@ -140,17 +140,12 @@ HZGD-160
 HZGD-161
 HZGD-163
 HZGD-168
+TDMN-021
 
 --  剧情不好
 SERO-396
 SERO-397
 SERO-398
-hunta-221
-hunta-222
-hunta-224
-hunta-234
-hunta-237
-hunta-239
 BMW-293
 BMW-302
 CJOB-143
