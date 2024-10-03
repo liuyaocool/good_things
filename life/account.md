@@ -4,10 +4,10 @@
 
 | 类型 | 地址 | 账号 |
 | - | - | - |
-| 域名1 | 阿里云 | liuyao.link, liuyao.ink |
-| 域名2 | https://www.namesilo.com/ | ilinux.ink |
-| dns | https://dash.cloudflare.com/ | 已关联 ilinux.ink |
-| VPS1 | https://my.racknerd.com/ | ;t:lPIyYeGA2 / 7ZnxN540E1y8tLtlON |
+| 域名1 | 阿里云 | liuyao.link |
+| 域名2 | https://www.namesilo.com/ |  |
+| dns | https://dash.cloudflare.com/ |  |
+| VPS1 | https://my.racknerd.com/ |  |
 | VPS1列表 | https://www.zhujiceping.com/50572.html |  |
 | VPS2(3年) | https://pacificrack.com/ | 163邮箱 |
 | VPS3 | 搬瓦工 |  |
@@ -29,3 +29,4 @@ https://v2rayssr.com/teach-vless.html
 
 - 真实赛车3: qq邮箱
 - 街头篮球: liu2809957275	阳生
+- sijishe: jiangziya L..Y..4
