@@ -30,3 +30,4 @@ https://v2rayssr.com/teach-vless.html
 - 真实赛车3: qq邮箱
 - 街头篮球: liu2809957275	阳生
 - sijishe: jiangziya L..Y..4
+- douyin: 同上
