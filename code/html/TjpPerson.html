@@ -1,0 +1,37 @@
+<style>
+    body {
+        background-color: #131412;
+    }
+</style>
+<script src="https://resource.liuyao.link/js/my/util.js"></script>
+<script>
+(async function() {
+    // 吉岡蓮美 真白爱梨 端希レイナ 江波りゅう 立花瑠莉 MisakiYoshimura(吉村美咲) KoiMiyamura,宮村恋
+
+    let person = await fetchTextFile('../video/japon_person');
+    let json1 = await fetchTextFile('../video/japan/01_japan.json');
+    let json2 = await fetchTextFile('../video/japan/02_japan_infantry.json');
+    let json1Obj = JSON.parse(json1);
+    let json2Obj = JSON.parse(json2);
+    json1 = '';
+    for(var k in json1Obj) json1 += k + '\n';
+    json2 = '';
+    for(var k in json2Obj) json2 += k + '\n';
+
+    person = person.split('\n');
+    let p, idx;
+    for (let i = 0; i < person.length; i++) {
+        if (!person[i]) continue;
+        p = person[i].split(' ')[0];
+        if ((idx = json1.indexOf(p)) >= 0) {
+            console.log(`${person[i]}: ${json1.substr(idx-1, p.length+2).trim()}`);
+            person[i] = '';
+        }
+        if ((idx = json2.indexOf(p)) >= 0) {
+            console.log(`${person[i]}: ${json2.substr(idx-1, p.length+3).trim()}`);
+            person[i] = '';
+        }
+    }
+    console.log(person.join('\n'));
+})()
+</script>
