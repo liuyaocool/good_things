@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# 创建A-Z的目录（如果不存在）
+for letter in {I..Z}; do
+    mkdir -p "${letter}"
+done
+
+# 遍历当前目录下I~Z开头的目录
+for dir in [I-Z]*/; do
+    # 去除目录名末尾的/
+    dir=${dir%/}
+    
+    echo "正在处理目录: $dir"
+    
+    # 遍历目录中的文件
+    for file in "$dir"/*; do
+        # 跳过目录本身
+        [ -f "$file" ] || continue
+        
+        filename=$(basename "$file")
+        first_char=${filename:0:1}  # 获取文件名第一个字符
+        
+        # 将第一个字符转为大写
+        # first_char_upper=$(echo "$first_char" | tr '[:lower:]' '[:upper:]')
+        
+        # 目标目录路径
+        # target_dir="Sorted_${first_char_upper}"
+        
+        # 移动文件到对应的目录
+        echo "移动文件: $file -> ${first_char}/"
+        mv -- "$file" "${first_char}/"
+    done
+done
+
+echo "文件整理完成！"
