@@ -1,8 +1,6 @@
-import org.junit.Test;
-
 import java.util.Scanner;
 
-public class Test {
+public class Testt {
 
     @org.junit.Test
     public void cursor() {

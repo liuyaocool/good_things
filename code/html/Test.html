@@ -1,0 +1,86 @@
+<style>
+    body {
+        background-color: #131412;
+    }
+</style>
+
+<script src="util.js"></script>
+
+<script>
+(async function() {
+    // japanCheck();
+    fc2Check();
+})()
+
+async function fc2Check() {
+    let arrCheckObj = await (async function () {
+        let arr = await getFileArray('0ck_fc2'), obj = {};
+        arr.forEach(line => obj[line.split(' ')[0]] = line);
+        return obj;
+    })();
+    let checkCode = function(line) {
+        let code = line.split(' ')[0];
+        if (arrCheckObj[code]) {
+            console.log(e);
+        }
+    }
+
+    let arr = await getFileArray('0_fc2pic');
+    arr.forEach(e => checkCode(e));
+    console.log(`-------- fc2 pic over --------`);
+
+    arr = await getFileArray('../../video/japan/05_fc2ppv.md');
+    arr.filter(e => e && !e.startsWith('#')).forEach(e => checkCode(e));
+    console.log(`-------- fc2 check over --------`);
+
+    arr = await getFileArray('../../video/japan/05_fc2ppv_no.txt');
+    arr.forEach(e => checkCode(e));
+    console.log(`-------- fc2 no over --------`);
+
+}
+
+async function japanCheck() {
+    let japanJson = await getFileJson('../../video/japan/01_japan.json');
+    let japanArray = await getFileArray('0ck_japan');
+    let japanArrayObj = {};
+    let code;
+    japanArray.filter(e => e && !e.startsWith('--')).forEach(e => {
+        code = e.split(' ');
+        if (japanArrayObj[code[0]]) {
+            console.log(code[0]);
+        }
+        japanArrayObj[code[0]] = e;
+    });
+    console.log("----------");
+    for(var name in japanJson) {
+        for(var nm in japanJson[name]) {
+            code = japanJson[name][nm].trim().split(' ')[0];
+            if (japanArrayObj[code]) {
+                console.log(japanArrayObj[code]);
+            }
+        }
+    }
+}
+
+async function getFileJson(path) {
+    let str = await fetchTextFile(path);
+    try {
+        return JSON.parse(str);
+    } catch(e) {
+        console.log(str);
+    }
+}
+async function getFileArray(path) {
+    return (await fetchTextFile(path)).split('\n');
+}
+function missav(nm) {
+    window.open(`https://missav.ws/en/search/${nm}`);
+    // window.open(`https://www.google.com/search?q=${nm}%20av&tbm=isch`);
+}
+function googleImg(nm) {
+    window.open(`https://www.google.com/search?q=${nm}&tbm=isch`);
+}
+function torrent(nm) {
+    window.open(`https://wuqiangb.top/search?keyword=${nm}`);
+}
+</script>
