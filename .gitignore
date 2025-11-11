@@ -2,3 +2,5 @@
 out/
 test/
 *.class
+.DS_Store
+target/
