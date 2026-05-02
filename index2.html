@@ -1,0 +1,173 @@
+#!/bin/bash
+#<div hidden>
+# 文件列表前的代码行先copy
+linenum=`grep -nF "files = [" index.html | tail -1 | cut -d: -f1`
+head -n $linenum index.html > indexhtml
+find pic -type f | sed "s/'//g; s/^/'/; s/$/',/" >> indexhtml
+echo '];</script>' >> indexhtml
+mv indexhtml index.html
+chmod +x index.html
+exit 0
+</div>
+<style>
+    body {
+        background-color: #181a1b;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        margin: 0;
+    }
+    input, p {
+        user-select: text;
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        cursor: text;
+    }
+    #imgContainer {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: 100%;
+        gap: 5px;
+        align-content: flex-start;
+        overflow: auto;
+    }
+    #filterText {
+        width: 230px;
+        margin-bottom: 6px;
+        background: none;
+        color: white;
+        outline: none;
+        border: 1px solid gray;
+    }
+    hl {color: greenyellow;}
+    sp {padding: 5px;}
+    wh {color: white;}
+    .item {
+        width: 200px;
+        display: inline-block;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #2a2c2e;
+        border: 1px solid #727272;
+    }
+    .item img {
+        width: 100%;
+    }
+    .item p {
+        font-size: 14px;
+        line-height: 1.4;
+        margin: 0;
+        padding: 2px 6px;
+        color: gray;
+    }
+    .input {
+        position: fixed;
+        bottom: 3px;
+        /* left: 50%; */
+        /* transform: translateX(-50%); */
+    }
+    #msg {
+        color: goldenrod;
+    }
+</style>
+<div id="imgContainer"></div>
+<div class="input">
+    <input id="filterText" type="text">
+    <input type="button" onclick="search()" value="search">
+    <span id="msg"></span>
+</div>
+<script>
+    document.body.childNodes[0].remove();
+    let files;
+    function search() {
+        let s = filterText.value.trim().toLowerCase(), imgHtml = '', lineSp;
+        if (!s) {
+            msg.innerHTML = '输入关键词再搜索.';
+            return;
+        }
+        if ('string' == typeof files[0]) {
+            for (let i = 0; i < files.length; i++) {
+                if (files[i].endsWith('/.DS_Store')) continue;
+                files[i] = [files[i], files[i].toLowerCase()];
+            }
+        }
+        for (const line of files) {
+            let idx = 0, match = false;
+            lineSp = line[0].split('');
+            while((idx = line[1].indexOf(s, idx)) >= 0) {
+                lineSp[idx] = '<hl>' + lineSp[idx];
+                lineSp[idx+s.length-1] = lineSp[idx+s.length-1] + '</hl>';
+                idx += s.length;
+                match = true;
+            }
+            if (match) {
+                // let set = false;
+                // for (let i = lineSp.length - 1; i >=0; i--) {
+                //     if (lineSp[i] == '/') {
+                //         lineSp[i] = '<sp>/</sp>';
+                //         if (!set)
+                //             lineSp[i] += '</wh><br>'
+                //         set = true;
+                //     }
+                // }
+                lineSp[idx = line[1].lastIndexOf('/')] += '</wh><br>'
+                imgHtml += `<div class="item"><img draggable="false" src="${line[0]}"><p><wh>${lineSp.join('')}</p></div>`;
+            }
+        }
+        imgContainer.innerHTML = imgHtml;
+    }
+    document.onkeydown = function (ev) {
+        console.log(`${ev.code}`);
+        switch(ev.code) {
+            case 'Slash': 
+                // 排除浏览器默认搜索按键
+                if ('INPUT' == ev.target.tagName && ev.target.type == 'text') {
+                    break;
+                }
+            case 'Escape': 
+                filterText.focus(); 
+                filterText.select();
+                ev.preventDefault();
+                break;
+            case "Enter": search(); break;
+        }
+    }
+    document.addEventListener("mousemove", e => {
+        /** 值（位掩码）：
+            值	按键	常量
+            0	没有按键	-
+            1	左键	MouseEvent.BUTTON_LEFT
+            2	右键	MouseEvent.BUTTON_RIGHT
+            4	中键/滚轮	MouseEvent.BUTTON_MIDDLE
+            8	浏览器后退	MouseEvent.BUTTON_BACK
+            16	浏览器前进	MouseEvent.BUTTON_FORWARD
+         */
+        switch(e.buttons) {
+            case 1: 
+                if ('P' === e.target.tagName) {
+                    break;
+                }
+                document.body.scrollLeft -= e.movementX;
+                document.body.scrollTop -= e.movementY;
+                break;
+        }
+        // msg.innerHTML = `clientY=${e.clientY}; layerY=${e.layerY}; offsetY=${e.offsetY}; pageY=${e.pageY}; screenY=${e.screenY}; y=${e.y}; movementY=${e.movementY}`;
+        // msg.innerHTML = `clientX=${e.clientX}; layerX=${e.layerX}; offsetX=${e.offsetX}; pageX=${e.pageX}; screenX=${e.screenX}; x=${e.x}; movementX=${e.movementX}`;
+    });
+    document.addEventListener('wheel', (e) => {
+        // console.log(e);
+        // console.log(`${e.deltaX} / ${e.deltaY}`);
+        // if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        // 0 为鼠标滚轮, 或mac触控板缩放??
+        // if (0 == e.deltaX) {
+        //     document.body.scrollLeft += e.deltaY * 2;
+        //     return;
+        // }
+        imgContainer.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    files = [
+];</script>
