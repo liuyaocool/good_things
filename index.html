@@ -7,10 +7,6 @@
     html, body { height: 100%; }
     body {
         background-color: #181a1b;
-        /* user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none; */
         margin: 0;
     }
     input, p {
@@ -30,16 +26,21 @@
         padding: 0 10px 10px 10px;
     }
     .fn {
-        position: absolute;
-        right: 0;
+        position: sticky;
         top: 0;
-        color: gray;
+        color: #97ff00;
         font-size: 12px;
+        text-align: right;
+        height: 0px;
     }
     #jsonContainer h3 {
         color: #808080a3;
         font-size: 12px;
         margin: 10px 0 0 0;
+    }
+    #jsonContainer ul {
+        padding-left: 15px;
+        margin-top: 0px;
     }
 
     #imgContainer {
@@ -50,14 +51,22 @@
         gap: 5px;
         align-content: flex-start;
         overflow: auto;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
     }
     #filterText {
         width: 230px;
         margin-bottom: 6px;
-        background: none;
         color: white;
         outline: none;
-        border: 1px solid gray;
+        border: 1px solid #be9805;
+        background-color: #0000;
+        backdrop-filter: blur(3px);
+    }
+    #filterText:focus {
+        border-color: #ffcb00;
     }
     hl {color: greenyellow;}
     sp {padding: 5px;}
@@ -97,7 +106,7 @@
         cursor: pointer;
     }
     .choose-btn {
-        background-color: greenyellow;
+        background-color: #ffcc03;
     }
 </style>
 </head>
@@ -159,13 +168,15 @@
                 html_k = exclude_k ? '' : hl_replace(k, '<hl>', '</hl>');
                 for (const line of files_json[fn][k]) {
                     if (!html_k && !(html_line = hl_replace(line, '<hl>', '</hl>'))) continue;
-                    html_block += `<div>${html_line.join('')}</div>`;
+                    console.log(line);
+                    console.log(html_line);
+                    html_block += `<li>${html_line ? html_line.join('') : line}</li>`;
                 }
                 if (html_block) {
-                    html_fn += (exclude_k ? '' : `<h3>${(html_k ? html_k.join('') : k)}</h3>`) + html_block;
+                    html_fn += (exclude_k ? '' : `<h3>${(html_k ? html_k.join('') : k)}</h3>`) + `<ul>${html_block}</ul>`;
                 }
             }
-            if (html_fn) html_full += `<div><span class="fn">${fn}</span>${html_fn}</div>`;
+            if (html_fn) html_full += `<div><div class="fn">${fn}</div>${html_fn}</div>`;
         }
         jsonContainer.innerHTML = html_full;
     }
@@ -292,7 +303,8 @@
                 break;
         }
     }
-    document.addEventListener("mousemove", e => {
+    imgContainer.addEventListener("mousemove", e => {
+        // console.log(`${e.buttons} ${e.movementX}`);
         /** 值（位掩码）：
             值	按键	常量
             0	没有按键	-
@@ -307,8 +319,8 @@
                 if ('P' === e.target.tagName) {
                     break;
                 }
-                document.body.scrollLeft -= e.movementX;
-                document.body.scrollTop -= e.movementY;
+                imgContainer.scrollLeft -= e.movementX;
+                imgContainer.scrollTop -= e.movementY;
                 break;
         }
         // msg.innerHTML = `clientY=${e.clientY}; layerY=${e.layerY}; offsetY=${e.offsetY}; pageY=${e.pageY}; screenY=${e.screenY}; y=${e.y}; movementY=${e.movementY}`;
