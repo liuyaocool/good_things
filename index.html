@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta name="viewport" content="initial-scale=1">
+    <meta name="viewport" content="initial-scale=0.8">
     <title>GoodSearch</title>
 <style>
+    body, body * {box-sizing: border-box;}
     html, body { height: 100%; }
     body {
         background-color: #181a1b;
         margin: 0;
     }
-    input, p {
-        user-select: text;
-        -webkit-user-select: text;
-        -moz-user-select: text;
-        -ms-user-select: text;
-        cursor: text;
+    #jsonContainer, #imgContainer {
+        padding-bottom: 30px;
     }
     #jsonContainer {
         color: white;
@@ -51,6 +48,8 @@
         gap: 5px;
         align-content: flex-start;
         overflow: auto;
+    }
+    #imgContainer img {
         user-select: none;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -95,7 +94,7 @@
     .input {
         position: fixed;
         bottom: 3px;
-        left: 200px;
+        /* left: 200px; */
         /* left: 50%; */
         /* transform: translateX(-50%); */
     }
