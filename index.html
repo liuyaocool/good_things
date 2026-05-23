@@ -193,14 +193,13 @@
                 k_html = exclude_k ? '' : hl_replace(k);
                 // 遍历文件key
                 for (const line of files_json[fn][k]) {
-                        console.log(`${is_full_fn} ${fn} ${k} ${line}`)
                     html_line = hl_replace(line);
                     // 文件名匹配 或 json的key匹配 或 行匹配
                     if (is_full_fn || k_html || html_line) {
                         html_block += `<li>
-                            <button class="line-btn" onclick="li_click(this)">mav</button>
-                            <button class="line-btn" onclick="li_click(this)">goi</button>
-                            <button class="line-btn" onclick="li_click(this)">bt</button>
+                            <input class="line-btn" type="button" onclick="li_click(this)" value="mav">
+                            <input class="line-btn" type="button" onclick="li_click(this)" value="goi">
+                            <input class="line-btn" type="button" onclick="li_click(this)" value="bt">
                             ${is_num(line[0]) ? (fn_only + '-') : ''}${html_line ? html_line.join('') : line}
                         </li>`;                        
                     }
