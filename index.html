@@ -107,20 +107,26 @@
     .choose-btn {
         background-color: #ffcc03;
     }
+    li {
+        position: relative;
+    }
+    li:hover .line-btn {
+        display: inline;
+    }
+    .line-btn {
+        display: none;
+        padding: 0 2px;
+        line-height: 12px;
+    }
 </style>
 </head>
 <body>
 <div id="jsonContainer"></div>
-<div id="imgContainer">
-    <!-- <div class=item>
-        <img draggable="false" src="pic/jp/J/JUR-163 白衣牛仔裤图书馆口.jpg">
-        <p>adfadadfa<hl>dfad<br>adfadsfadf</hl>adsfads</p>
-    </div> -->
-</div>
+<div id="imgContainer"></div>
 <div class="input">
     <input id="filterText" type="text">
-    <input type="button" class="btn choose-btn" onclick="search_pic()" value="search pic">
-    <input type="button" class="btn" onclick="search_text()" value="search text">
+    <input type="button" class="btn choose-btn" onclick="search_pic()" value="pic">
+    <input type="button" class="btn" onclick="search_text()" value="text">
     <span id="msg"></span>
 </div>
 </body>
@@ -150,46 +156,91 @@
     }
 
     function search_text() {
-        let s = filterText.value.trim().toLowerCase();
+        let s = filterText.value.trim();
         if (!s) {
             msg.innerHTML = '输入关键词再搜索.';
             return;
         }
         switch_container(jsonContainer);
 
+        let fn_only, fn_html, k_html, k_fn, exclude_k, is_full_fn = false,
+            html_full = '', html_fn, html_block, html_line;
+        while ((html_fn = s.indexOf(':')) >= 0) {
+            // 空格在:前边的 不是文件名匹配逻辑
+            if ((html_block = s.indexOf(' ')) >= 0 && html_block < html_fn) break;
+            // 分割文件名的 搜索key
+            k_fn = [s.slice(0, html_fn)];
+            // 分割出行的 搜索key
+            s = s.slice(html_fn + 1);
+            // 判断是否显示全文
+            is_full_fn = s ? false : true;
+            break;
+        }
         hl_keys(s);
-        let html_full = '', html_fn, html_block, html_k, html_line, exclude_k;
+
         for(const fn in files_json) {
             html_fn = '';
+            // 去除后缀的文件名
+            fn_only = fn.slice(0, fn.lastIndexOf('.'));
+            // 匹配文件名 文件名的逻辑都在这个字段，有key则匹配名称，无则为true
+            if (k_fn && !(fn_html = hl_replace(fn_only, k_fn))) continue;
+            // 遍历文件
             for(const k in files_json[fn]) {
                 html_block = '';
+                // json的key 后缀为xx的不显示
                 exclude_k = k.length < 5 && k.endsWith('xx');
-                html_k = exclude_k ? '' : hl_replace(k, '<hl>', '</hl>');
+                // json的key 的html文本
+                k_html = exclude_k ? '' : hl_replace(k);
+                // 遍历文件key
                 for (const line of files_json[fn][k]) {
-                    if (!html_k && !(html_line = hl_replace(line, '<hl>', '</hl>'))) continue;
-                    console.log(line);
-                    console.log(html_line);
-                    html_block += `<li>${html_line ? html_line.join('') : line}</li>`;
+                        console.log(`${is_full_fn} ${fn} ${k} ${line}`)
+                    html_line = hl_replace(line);
+                    // 文件名匹配 或 json的key匹配 或 行匹配
+                    if (is_full_fn || k_html || html_line) {
+                        html_block += `<li>
+                            <button class="line-btn" onclick="li_click(this)">mav</button>
+                            <button class="line-btn" onclick="li_click(this)">goi</button>
+                            <button class="line-btn" onclick="li_click(this)">bt</button>
+                            ${is_num(line[0]) ? (fn_only + '-') : ''}${html_line ? html_line.join('') : line}
+                        </li>`;                        
+                    }
                 }
                 if (html_block) {
-                    html_fn += (exclude_k ? '' : `<h3>${(html_k ? html_k.join('') : k)}</h3>`) + `<ul>${html_block}</ul>`;
+                    html_fn += (exclude_k ? '' : `<h3>${(k_html ? k_html.join('') : k)}</h3>`) + `<ul>${html_block}</ul>`;
                 }
             }
             if (html_fn) html_full += `<div><div class="fn">${fn}</div>${html_fn}</div>`;
         }
         jsonContainer.innerHTML = html_full;
     }
+
+    function li_click(dom) {
+        let line = dom.parentElement.innerText.trim();
+        let line_sp = line.split(' ');
+        let url;
+        switch(dom.value) {
+            case 'mav': url = `https://missav.ws/en/search/${line_sp[0]}`; break;
+            case 'goi': url = `https://www.google.com/search?q=${line_sp[0]}&tbm=isch`; break;
+            case 'bt':
+                url = `https://skrbtso.top/search?keyword=${line_sp[0]}-C`; 
+                copyToClipboard(`${line_sp[0]}-C`);
+                break;
+            default: return;
+        }
+        window.open(url, "_blank", "noopener,noreferrer");
+    }
+
     function search_pic() {
-        let s = filterText.value.trim().toLowerCase(), imgHtml = '', lineHtml;
+        let s = filterText.value.trim();
         if (!s) {
             msg.innerHTML = '输入关键词再搜索.';
             return;
         }
         switch_container(imgContainer);
-
         hl_keys(s);
+        let imgHtml = '', lineHtml;
         for (const line of files) {
-            if (!(lineHtml = hl_replace(line.slice(4, line.lastIndexOf('.')), '<hl>', '</hl>'))) continue;
+            if (!(lineHtml = hl_replace(line.slice(4, line.lastIndexOf('.'))))) continue;
             lineHtml[lineHtml.lastIndexOf('/')] += '<br>';
             imgHtml += `<div class="item">
                 <img draggable="false" src="${line}">
@@ -233,10 +284,10 @@
     }
 
     // return array, 如果需要字符串, 调用 .join('');
-    function hl_replace(line_origin, hl_start, hl_end) {
+    function hl_replace(line_origin, hl_key_arr = window.hl_key_arr, hl_start = '<hl>', hl_end = '</hl>') {
         let line = line_origin.toLowerCase();
         let key_bit = new Array(line.length).fill(0), key_idx;
-        for (const k of window.hl_key_arr) {
+        for (const k of hl_key_arr) {
             if (!k) continue;
             if(k[0] == '-') {
                 if (line.indexOf(k.slice(1)) >= 0) return null;
@@ -250,6 +301,7 @@
             } while ((key_idx = line.indexOf(k, key_idx + 1)) >= 0)
         }
         let res = [], prev_bit = 0;
+        // 合并 且 加上高亮字符串
         for (let i = 0; i < line.length; i++) {
             res[i] = line_origin[i];
             if (key_bit[i] == prev_bit) continue;
@@ -260,6 +312,37 @@
             res[res.length-1] += hl_end; 
         }
         return res;
+    }
+
+    function is_num(c) {
+        return 47 < c.charCodeAt(0) && c.charCodeAt(0) < 58;
+    }
+
+    function copyToClipboard(text) {
+        if (navigator.clipboard) { // 需https
+            navigator.clipboard.writeText(text).catch(() => {
+                copyToClipboardOld(text);
+            });        
+        } else {
+            copyToClipboardOld(text);
+        }
+        // navigator.clipboard.write([new ClipboardItem({ "text/plain": new Blob(["mingzi哈哈哈哈"], { type: "text/plain" }) })]);
+    }
+
+    function copyToClipboardOld(str) {
+        let dom = document.getElementById("lyCopyContainer");
+        if (!dom) {
+            let textDom = document.createElement('textarea');
+            textDom.id = "lyCopyContainer";
+            textDom.style.position = 'absolute';
+            textDom.style.top = '-100%';
+            document.body.append(textDom);
+            dom = document.getElementById("lyCopyContainer");
+        }
+        dom.value = str;
+        dom.setSelectionRange(0, str.length);
+        dom.select();
+        document.execCommand('copy');
     }
 
     async function fetch_file(file_path) {
@@ -334,5 +417,12 @@
         // }
         imgContainer.scrollLeft += e.deltaY;
     }, { passive: false });
+
+
+    test(12, undefined, 13);
+    function test(a, b = window.b, c = 'cc', d = 'dd') {
+        console.log(`${a} ${b} ${c} ${d}`);
+        return `${a} ${b} ${c} ${d}`;
+    }
 </script>
 </html>
