@@ -131,13 +131,17 @@
 </div>
 </body>
 <script>
+
+    window.onbeforeunload = ev => {sessionStorage.filterText = filterText.value;}
+    if (sessionStorage.filterText && sessionStorage.filterText != 'undefined') filterText.value = sessionStorage.filterText;
+
     let files = [], files_json = {},
-        files_json_name = [ '00_plot.json', '01_japan.json', '02_japan_infantry.json', '03_fc2ppv.json',
-            '300MIUM.json',
-            'AARM.json', 'ATOM.json', 'CLUB.json', 'DANDY.json', 'DOCP.json', 'FAA.json', 'FSET.json', 'FTKD.json', 'GBAN.json', 'GDHH.json', 'GETS.json',
-            'HEZ.json', 'HGOT.json', 'HHF.json', 'HQIS.json', 'HTMS.json', 'HUNBL.json', 'HUNTA.json', 'HUNTB.json', 'HUNTC.json', 'HUNT.json',
-            'IENE.json', 'IENF.json', 'JNC.json', 'KIL.json', 'LHBY.json', 'MFO.json', 'MIMU.json', 'NASH.json', 'NHDTA.json', 'NHDTB.json', 'NHDT.json', 'NXG.json',
-            'OVG.json', 'RCT.json', 'RDD.json', 'RDT.json', 'SCOP.json', 'SCPX.json', 'SIM.json', 'SUJI.json', 'SW.json', 'VRTM.json', 'VSPDS.json', 'WA.json', 'ZMEN.json',
+        files_json_name = ['00_plot', '02_japan_infantry', '01_japan', '03_fc2ppv',
+            '300MIUM',
+            'AARM', 'ATOM', 'CLUB', 'DANDY', 'DOCP', 'FAA', 'FSET', 'FTKD', 'GBAN', 'GDHH', 'GETS',
+            'HEZ', 'HGOT', 'HHF', 'HQIS', 'HTMS', 'HUNBL', 'HUNTA', 'HUNTB', 'HUNTC', 'HUNT',
+            'IENE', 'IENF', 'JNC', 'KIL', 'LHBY', 'MFO', 'MIMU', 'NASH', 'NHDTA', 'NHDTB', 'NHDT', 'NXG',
+            'OVG', 'RCT', 'RDD', 'RDT', 'SCOP', 'SCPX', 'SIM', 'SUJI', 'SW', 'VRTM', 'VSPDS', 'WA', 'ZMEN',
         ];
     fetch_file("piclist").then(text => {
         let lines = text.split('\n');
@@ -149,10 +153,11 @@
             files.push(lines[i]);
         }
     });
+
     for (const fn of files_json_name) {
-        fetch_file(`video/japan/${fn}`).then(text => files_json[fn] = JSON.parse(text))
-        .catch(e => console.error(`---${fn}---`, e))
-        ;
+        fetch_file(`video/japan/${fn}.json`)
+            .then(text => files_json[fn] = JSON.parse(text))
+            .catch(e => console.error(`---${fn}---`, e));
     }
 
     function search_text() {
@@ -163,7 +168,7 @@
         }
         switch_container(jsonContainer);
 
-        let fn_only, fn_html, k_html, k_fn, exclude_k, is_full_fn = false,
+        let fn_html, k_html, k_fn, exclude_k, is_full_fn = false,
             html_full = '', html_fn, html_block, html_line;
         while ((html_fn = s.indexOf(':')) >= 0) {
             // 空格在:前边的 不是文件名匹配逻辑
@@ -177,13 +182,13 @@
             break;
         }
         hl_keys(s);
+        console.log(123)
 
-        for(const fn in files_json) {
+        for(const [i,fn] of files_json_name.entries()) {
             html_fn = '';
-            // 去除后缀的文件名
-            fn_only = fn.slice(0, fn.lastIndexOf('.'));
+            console.log(fn)
             // 匹配文件名 文件名的逻辑都在这个字段，有key则匹配名称，无则为true
-            if (k_fn && !(fn_html = hl_replace(fn_only, k_fn))) continue;
+            if (k_fn && !(fn_html = hl_replace(fn, k_fn))) continue;
             // 遍历文件
             for(const k in files_json[fn]) {
                 html_block = '';
@@ -200,7 +205,7 @@
                             <input class="line-btn" type="button" onclick="li_click(this)" value="mav">
                             <input class="line-btn" type="button" onclick="li_click(this)" value="goi">
                             <input class="line-btn" type="button" onclick="li_click(this)" value="bt">
-                            ${is_num(line[0]) ? (fn_only + '-') : ''}${html_line ? html_line.join('') : line}
+                            ${i > 3 ? (fn + '-') : ''}${html_line ? html_line.join('') : line}
                         </li>`;                        
                     }
                 }
@@ -363,8 +368,8 @@
                 break;
             // case "ShiftLeft":
             // case "ShiftRight":
-            case "ControlLeft":
-            case "ControlRight":
+            case "Backquote":
+            case "Tab":
                 let btns = document.querySelectorAll('.btn'), a = false;
                 for (let i = 0; i < btns.length; i++) {
                     if (btns[i].classList.contains('choose-btn')) {
