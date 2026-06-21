@@ -291,8 +291,9 @@
     function hl_replace(line_origin, hl_key_arr = window.hl_key_arr, hl_start = '<hl>', hl_end = '</hl>') {
         let line = line_origin.toLowerCase();
         let key_bit = new Array(line.length).fill(0), key_idx;
-        for (const k of hl_key_arr) {
+        for (let k of hl_key_arr) {
             if (!k) continue;
+            k = k.toLowerCase();
             if(k[0] == '-') {
                 if (line.indexOf(k.slice(1)) >= 0) return null;
                 continue;
