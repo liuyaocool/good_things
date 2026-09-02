@@ -136,12 +136,13 @@
     if (sessionStorage.filterText && sessionStorage.filterText != 'undefined') filterText.value = sessionStorage.filterText;
 
     let files = [], files_json = {},
+        need_file_name_idx = 3,
         files_json_name = ['00_plot', '02_japan_infantry', '01_japan', '03_fc2ppv',
             '300MIUM',
             'AARM', 'ATOM', 'CLUB', 'DANDY', 'DOCP', 'FAA', 'FSET', 'FTKD', 'GBAN', 'GDHH', 'GETS',
             'HEZ', 'HGOT', 'HHF', 'HQIS', 'HTMS', 'HUNBL', 'HUNTA', 'HUNTB', 'HUNTC', 'HUNT',
             'IENE', 'IENF', 'JNC', 'KIL', 'LHBY', 'MFO', 'MIMU', 'NASH', 'NHDTA', 'NHDTB', 'NHDT', 'NXG',
-            'OVG', 'RCT', 'RDD', 'RDT', 'SCOP', 'SCPX', 'SIM', 'SUJI', 'SW', 'VRTM', 'VSPDS', 'WA', 'ZMEN',
+            'OVG', 'RCT', 'RDD', 'RDT', 'RTP', 'SCOP', 'SCPX', 'SIM', 'SUJI', 'SW', 'VRTM', 'VSPDS', 'WA', 'ZMEN',
         ];
     fetch_file("piclist").then(text => {
         let lines = text.split('\n');
@@ -205,7 +206,7 @@
                             <input class="line-btn" type="button" onclick="li_click(this)" value="mav">
                             <input class="line-btn" type="button" onclick="li_click(this)" value="goi">
                             <input class="line-btn" type="button" onclick="li_click(this)" value="bt">
-                            ${i > 3 ? (fn + '-') : ''}${html_line ? html_line.join('') : line}
+                            ${i > need_file_name_idx ? (fn + '-') : ''}${html_line ? html_line.join('') : line}
                         </li>`;                        
                     }
                 }

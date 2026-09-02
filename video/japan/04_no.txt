@@ -7,6 +7,7 @@ DASD-694
 SDDE-577 人妖剧情
 
 --人丑
+MIDV-943
 OYC-217
 GS-350
 DOCP-099
@@ -182,6 +183,7 @@ OKURAM-443
 FST-023
 
 --  剧情不好
+mida-056
 SDDE-476 侏儒没参与
 SDDE-465 侏儒没参与
 SIRO-3818 角度p图
