@@ -4,3 +4,4 @@ test/
 *.class
 .DS_Store
 target/
+icon/
